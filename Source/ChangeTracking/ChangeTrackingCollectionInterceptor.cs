@@ -106,10 +106,10 @@ namespace ChangeTracking
             foreach (var item in _WrappedTarget.Cast<IChangeTrackable<T>>())
             {
                 item.AcceptChanges();
-                if (item is System.ComponentModel.IEditableObject editable)
-                {
-                    editable.EndEdit();
-                }
+                item.DoIfType<System.ComponentModel.IEditableObject>(editable =>
+                    editable.EndEdit()
+                );
+
             }
             _DeletedItems.Clear();
         }

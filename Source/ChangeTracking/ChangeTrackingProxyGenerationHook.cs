@@ -29,7 +29,8 @@ namespace ChangeTracking
 
         public void NonProxyableMemberNotification(Type type, MemberInfo memberInfo)
         {
-            if (memberInfo is MethodInfo methodInfo && methodInfo.IsProperty())
+            var methodInfo = memberInfo as MethodInfo;
+            if (methodInfo?.IsProperty() == true)
             {
                 throw new InvalidOperationException($"Property {methodInfo.Name.Substring("set_".Length)} is not virtual. Can't track classes with non-virtual properties.");
             }

@@ -118,7 +118,9 @@ namespace ChangeTracking
                 invocation.ReturnValue = ComplexPropertyTrackables(invocation.Proxy);
                 return;
             }
-            if (_MakeComplexPropertiesTrackable && _Actions.TryGetValue(invocation.Method.Name, out Action<IInvocation, Dictionary<string, object>, bool, bool> action))
+
+            Action<IInvocation, Dictionary<string, object>, bool, bool> action;
+            if (_MakeComplexPropertiesTrackable && _Actions.TryGetValue(invocation.Method.Name, out action))
             {
                 action(invocation, _Trackables, _MakeComplexPropertiesTrackable, _MakeCollectionPropertiesTrackable);
             }

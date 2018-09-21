@@ -80,7 +80,9 @@ namespace ChangeTracking
 
         private void UnsubscribeFromChildPropertyChanged(string propertyName, object oldChild)
         {
-            if (oldChild is INotifyPropertyChanged trackable && _PropertyChangedEventHandlers.TryGetValue(propertyName, out global::System.ComponentModel.PropertyChangedEventHandler handler))
+            global::System.ComponentModel.PropertyChangedEventHandler handler;
+            var trackable = oldChild as INotifyPropertyChanged;
+            if (trackable != null && _PropertyChangedEventHandlers.TryGetValue(propertyName, out handler))
             {
                 trackable.PropertyChanged -= handler;
                 _PropertyChangedEventHandlers.Remove(propertyName);
@@ -89,7 +91,8 @@ namespace ChangeTracking
 
         private void SubscribeToChildPropertyChanged(IInvocation invocation, string propertyName, object newValue)
         {
-            if (newValue is INotifyPropertyChanged newChild && !_PropertyChangedEventHandlers.ContainsKey(propertyName))
+            var newChild = newValue as INotifyPropertyChanged;
+            if (newChild!=null && !_PropertyChangedEventHandlers.ContainsKey(propertyName))
             {
                 PropertyChangedEventHandler newHandler = (object sender, PropertyChangedEventArgs e) => RaisePropertyChanged(invocation.Proxy, propertyName);
                 newChild.PropertyChanged += newHandler;
@@ -99,7 +102,9 @@ namespace ChangeTracking
 
         private void UnsubscribeFromChildListChanged(string propertyName, object oldChild)
         {
-            if (oldChild is IBindingList trackable && _ListChangedEventHandlers.TryGetValue(propertyName, out global::System.ComponentModel.ListChangedEventHandler handler))
+            var trackable = oldChild as IBindingList;
+            global::System.ComponentModel.ListChangedEventHandler handler;
+            if (trackable !=null && _ListChangedEventHandlers.TryGetValue(propertyName, out handler))
             {
                 trackable.ListChanged -= handler;
                 _ListChangedEventHandlers.Remove(propertyName);
@@ -108,7 +113,8 @@ namespace ChangeTracking
 
         private void SubscribeToChildListChanged(IInvocation invocation, string propertyName, object newValue)
         {
-            if (newValue is IBindingList newChild && !_ListChangedEventHandlers.ContainsKey(propertyName))
+            var newChild = newValue as IBindingList;
+            if (newChild!=null && !_ListChangedEventHandlers.ContainsKey(propertyName))
             {
                 ListChangedEventHandler newHandler = (object sender, ListChangedEventArgs e) => RaisePropertyChanged(invocation.Proxy, propertyName);
                 newChild.ListChanged += newHandler;

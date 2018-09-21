@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{54626772-0855-4AF4-8F10-B3E754D6EA48}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ChangeTracking</RootNamespace>
+    <AssemblyName>ChangeTracking</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Source\ChangeTracking\ChangeStatus.cs">
+      <Link>ChangeStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ChangeTrackingBindingList.cs">
+      <Link>ChangeTrackingBindingList.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ChangeTrackingCollectionInterceptor.cs">
+      <Link>ChangeTrackingCollectionInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ChangeTrackingInterceptor.cs">
+      <Link>ChangeTrackingInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ChangeTrackingInterceptorSelector.cs">
+      <Link>ChangeTrackingInterceptorSelector.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ChangeTrackingProxyGenerationHook.cs">
+      <Link>ChangeTrackingProxyGenerationHook.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\CollectionPropertyInterceptor.cs">
+      <Link>CollectionPropertyInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ComplexPropertyInterceptor.cs">
+      <Link>ComplexPropertyInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\Core.cs">
+      <Link>Core.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\EditableObjectInterceptor.cs">
+      <Link>EditableObjectInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\IChangeTrackable.cs">
+      <Link>IChangeTrackable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\IChangeTrackableCollection.cs">
+      <Link>IChangeTrackableCollection.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\IChangeTrackingManager.cs">
+      <Link>IChangeTrackingManager.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\ICollectionPropertyTrackable.cs">
+      <Link>ICollectionPropertyTrackable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\IComplexPropertyTrackable.cs">
+      <Link>IComplexPropertyTrackable.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\IInterceptorSettings.cs">
+      <Link>IInterceptorSettings.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\NotifyPropertyChangedInterceptor.cs">
+      <Link>NotifyPropertyChangedInterceptor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Source\ChangeTracking\Utils.cs">
+      <Link>Utils.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

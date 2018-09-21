@@ -126,7 +126,8 @@ namespace ChangeTracking
 
         private object GetOriginalValue(T target, string propertyName)
         {
-            if (!_OriginalValueDictionary.TryGetValue(propertyName, out object value))
+            object value;
+            if (!_OriginalValueDictionary.TryGetValue(propertyName, out value))
             {
                 try
                 {
@@ -145,13 +146,14 @@ namespace ChangeTracking
             var propertyInfo = GetPropertyInfo(selector);
 
             string propName = propertyInfo.Name;
-            TResult originalValue = _OriginalValueDictionary.TryGetValue(propName, out object value) ?
+            object value;
+            TResult originalValue = _OriginalValueDictionary.TryGetValue(propName, out value) ?
                 (TResult)value : 
                 selector.Compile()(target);
-            if (originalValue is IChangeTrackableInternal trackable)
+            originalValue.DoIfType<IChangeTrackableInternal>(trackable =>
             {
-                originalValue = (TResult)trackable.GetOriginal();
-            }
+                originalValue = (TResult) trackable.GetOriginal();
+            });
             return originalValue;
         }
 
@@ -182,12 +184,12 @@ namespace ChangeTracking
             var original = Activator.CreateInstance<T>();
             foreach (var property in _Properties.Values)
             {
-                object originalValue = _OriginalValueDictionary.TryGetValue(property.Name, out object value) ? value : property.GetValue(proxy, null);
+                object value;
+                object originalValue = _OriginalValueDictionary.TryGetValue(property.Name, out value) ? value : property.GetValue(proxy, null);
                 if (originalValue != null)
                 {
-                    if (originalValue is IChangeTrackableInternal trackable)
+                    if(originalValue.DoIfType<IChangeTrackableInternal>(trackable => { originalValue = trackable.GetOriginal(); }))
                     {
-                        originalValue = trackable.GetOriginal();
                     }
                     else if (originalValue.GetType().GetInterface("IChangeTrackableCollection`1") != null)
                     {
@@ -213,9 +215,8 @@ namespace ChangeTracking
                 object currentValue = property.GetValue(proxy, null);
                 if (currentValue != null)
                 {
-                    if (currentValue is IChangeTrackableInternal trackable)
+                    if (currentValue.DoIfType<IChangeTrackableInternal>(trackable => { currentValue = trackable.GetCurrent(); }))
                     {
-                        currentValue = trackable.GetCurrent();
                     }
                     else if (currentValue.GetType().GetInterface("IChangeTrackableCollection`1") != null)
                     {
@@ -297,19 +298,22 @@ namespace ChangeTracking
 
         private void UnsubscribeFromChildStatusChanged(string propertyName, object oldChild)
         {
-            if (_StatusChangedEventHandlers.TryGetValue(propertyName, out Delegate handler))
+            Delegate handler;
+            if (_StatusChangedEventHandlers.TryGetValue(propertyName, out handler))
             {
-                if (oldChild is IChangeTrackable trackable)
+                if (oldChild.DoIfType<IChangeTrackable>(trackable =>
                 {
-                    trackable.StatusChanged -= (EventHandler)handler;
+                    trackable.StatusChanged -= (EventHandler) handler;
                     _StatusChangedEventHandlers.Remove(propertyName);
+                }))
+                {
                     return;
                 }
-                if (oldChild is System.ComponentModel.IBindingList collectionTrackable)
+                oldChild.DoIfType<System.ComponentModel.IBindingList>(collectionTrackable =>
                 {
-                    collectionTrackable.ListChanged -= (System.ComponentModel.ListChangedEventHandler)handler;
+                    collectionTrackable.ListChanged -= (System.ComponentModel.ListChangedEventHandler) handler;
                     _StatusChangedEventHandlers.Remove(propertyName);
-                }
+                });
             }
         }
 
@@ -317,19 +321,22 @@ namespace ChangeTracking
         {
             if (!_StatusChangedEventHandlers.ContainsKey(propertyName))
             {
-                if (newValue is IChangeTrackable newChild)
+                if (newValue.DoIfType<IChangeTrackable>(newChild =>
                 {
                     EventHandler newHandler = (sender, e) => SetAndRaiseStatusChanged(proxy, false);
                     newChild.StatusChanged += newHandler;
                     _StatusChangedEventHandlers.Add(propertyName, newHandler);
+                }))
+                {
                     return;
                 }
-                if (newValue is System.ComponentModel.IBindingList newCollectionChild)
+
+                newValue.DoIfType<System.ComponentModel.IBindingList>(newCollectionChild =>
                 {
                     System.ComponentModel.ListChangedEventHandler newHandler = (sender, e) => SetAndRaiseStatusChanged(proxy, false);
                     newCollectionChild.ListChanged += newHandler;
                     _StatusChangedEventHandlers.Add(propertyName, newHandler);
-                }
+                });
             }
         }
 
